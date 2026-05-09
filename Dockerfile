@@ -1,10 +1,10 @@
 # =============================================
-# Clean & Stable Dockerfile for LivePortrait
+# Minimal & Stable Dockerfile for AdvancedLivePortrait
 # =============================================
 
 FROM runpod/worker-comfyui:5.8.4-base
 
-# Install system dependencies
+# Install only essential system packages
 RUN apt-get update --allow-releaseinfo-change && \
     apt-get install -y --no-install-recommends \
     git \
@@ -15,16 +15,10 @@ RUN apt-get update --allow-releaseinfo-change && \
     libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install the main custom node (includes ExpressionEditor)
+# Install the main custom node (this includes ExpressionEditor + LivePortrait)
 RUN comfy node install --exit-on-fail comfyui-advancedliveportrait --mode remote
 
-# Extra dependencies often needed by LivePortrait
-RUN pip install --no-cache-dir \
-    insightface==0.7.3 \
-    onnxruntime-gpu \
-    opencv-python-headless
-
-# Set permissions
+# Set correct permissions
 RUN chown -R root:root /comfyui && chmod -R 755 /comfyui
 
 EXPOSE 8188
